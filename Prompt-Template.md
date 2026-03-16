@@ -10,7 +10,7 @@ Whenever I ask about a design pattern, explain it in a clear, professional, and 
 4. Motivation (real-world analogy if possible)
 5. Structure (explain the roles in the pattern)
 6. UML diagram explanation
-7. Implementation example (preferably in Java)
+7. Implementation example (preferably in TypeScript)
 8. Step-by-step explanation of the code
 9. Advantages
 10. Disadvantages
@@ -20,3 +20,5 @@ Whenever I ask about a design pattern, explain it in a clear, professional, and 
 14. Related patterns
 
 Keep the explanation beginner-friendly but technically accurate.
+
+Create a .md file and answer into it so I can easily track the content.

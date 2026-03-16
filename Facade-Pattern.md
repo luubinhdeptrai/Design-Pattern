@@ -42,98 +42,106 @@ In UML terms:
 - Client → Facade (association / dependency)
 - Facade → SubsystemA / SubsystemB / SubsystemC (dependencies)
 
-## 7. Implementation example (preferably in Java)
+## 7. Implementation example (TypeScript)
 Example scenario: “watch a movie” using a home theater subsystem.
 
 ### Subsystem classes
-```java
-package patterns.facade;
-
+```ts
 class Amplifier {
-    void on() { System.out.println("Amplifier: on"); }
-    void setVolume(int level) { System.out.println("Amplifier: volume=" + level); }
-    void off() { System.out.println("Amplifier: off"); }
+    on(): void {
+        console.log("Amplifier: on");
+    }
+    setVolume(level: number): void {
+        console.log(`Amplifier: volume=${level}`);
+    }
+    off(): void {
+        console.log("Amplifier: off");
+    }
 }
 
 class Projector {
-    void on() { System.out.println("Projector: on"); }
-    void wideScreenMode() { System.out.println("Projector: widescreen mode"); }
-    void off() { System.out.println("Projector: off"); }
+    on(): void {
+        console.log("Projector: on");
+    }
+    wideScreenMode(): void {
+        console.log("Projector: widescreen mode");
+    }
+    off(): void {
+        console.log("Projector: off");
+    }
 }
 
 class StreamingPlayer {
-    void on() { System.out.println("Player: on"); }
-    void play(String movie) { System.out.println("Player: playing \"" + movie + "\""); }
-    void stop() { System.out.println("Player: stop"); }
-    void off() { System.out.println("Player: off"); }
+    on(): void {
+        console.log("Player: on");
+    }
+    play(movie: string): void {
+        console.log(`Player: playing "${movie}"`);
+    }
+    stop(): void {
+        console.log("Player: stop");
+    }
+    off(): void {
+        console.log("Player: off");
+    }
 }
 
 class TheaterLights {
-    void dim(int level) { System.out.println("Lights: dim to " + level + "%"); }
-    void on() { System.out.println("Lights: on"); }
+    dim(level: number): void {
+        console.log(`Lights: dim to ${level}%`);
+    }
+    on(): void {
+        console.log("Lights: on");
+    }
 }
 ```
 
 ### Facade
-```java
-package patterns.facade;
+```ts
+class HomeTheaterFacade {
+    constructor(
+        private readonly amplifier: Amplifier,
+        private readonly projector: Projector,
+        private readonly player: StreamingPlayer,
+        private readonly lights: TheaterLights
+    ) {}
 
-public class HomeTheaterFacade {
-    private final Amplifier amplifier;
-    private final Projector projector;
-    private final StreamingPlayer player;
-    private final TheaterLights lights;
-
-    public HomeTheaterFacade(Amplifier amplifier,
-                             Projector projector,
-                             StreamingPlayer player,
-                             TheaterLights lights) {
-        this.amplifier = amplifier;
-        this.projector = projector;
-        this.player = player;
-        this.lights = lights;
+    watchMovie(movie: string): void {
+        console.log("=== Get ready to watch a movie ===");
+        this.lights.dim(10);
+        this.projector.on();
+        this.projector.wideScreenMode();
+        this.amplifier.on();
+        this.amplifier.setVolume(7);
+        this.player.on();
+        this.player.play(movie);
     }
 
-    public void watchMovie(String movie) {
-        System.out.println("=== Get ready to watch a movie ===");
-        lights.dim(10);
-        projector.on();
-        projector.wideScreenMode();
-        amplifier.on();
-        amplifier.setVolume(7);
-        player.on();
-        player.play(movie);
-    }
-
-    public void endMovie() {
-        System.out.println("=== Shutting movie theater down ===");
-        player.stop();
-        player.off();
-        amplifier.off();
-        projector.off();
-        lights.on();
+    endMovie(): void {
+        console.log("=== Shutting movie theater down ===");
+        this.player.stop();
+        this.player.off();
+        this.amplifier.off();
+        this.projector.off();
+        this.lights.on();
     }
 }
 ```
 
 ### Client
-```java
-package patterns.facade;
+```ts
+(() => {
+    const amplifier = new Amplifier();
+    const projector = new Projector();
+    const player = new StreamingPlayer();
+    const lights = new TheaterLights();
 
-public class Demo {
-    public static void main(String[] args) {
-        Amplifier amplifier = new Amplifier();
-        Projector projector = new Projector();
-        StreamingPlayer player = new StreamingPlayer();
-        TheaterLights lights = new TheaterLights();
+    const theater = new HomeTheaterFacade(amplifier, projector, player, lights);
 
-        HomeTheaterFacade theater = new HomeTheaterFacade(amplifier, projector, player, lights);
-
-        theater.watchMovie("Inception");
-        System.out.println();
-        theater.endMovie();
-    }
-}
+    theater.watchMovie("Inception");
+    console.log("");
+    theater.endMovie();
+})();
 ```
 
 ## 8. Step-by-step explanation of the code
